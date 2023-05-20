@@ -7,8 +7,10 @@ from PIL import Image
 from numpy import asarray
 ROWS = 30
 COLUMNS = 50
-START = [2, 2]
+START = [ROWS-28, COLUMNS-28]
+END = [ROWS-28,COLUMNS-48]
 # end = [rows-1,columns-1]
+START = [2, 2]
 END = [28,48]
 
 def get_less_walls(_a):
@@ -184,7 +186,7 @@ for i in range(rows*columns):
 # print(the_path)
 
 
-images[0].save('maze.gif',
+images[0].save('opis.gif',
                save_all=True, append_images=images[1:],
                optimize=False, duration=1, loop=0)
 
