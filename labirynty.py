@@ -1,17 +1,13 @@
 
 from PIL import Image, ImageDraw
-import numpy as np
-import numpy
 import random
-from PIL import Image
 from numpy import asarray
-ROWS = 30
-COLUMNS = 50
-START = [ROWS-28, COLUMNS-28]
-END = [ROWS-28,COLUMNS-48]
-# end = [rows-1,columns-1]
-START = [2, 2]
-END = [28,48]
+
+# ROWS = 30
+# COLUMNS = 50
+
+# START = [2, 2]
+# END = [28,48]
 
 def get_less_walls(_a):
    for i in range(rows):
@@ -24,7 +20,7 @@ def get_more_walls(_a):
    for i in range(rows):
       for j in range(columns):
         if _a[i][j] == 0:
-          if random.randint(0, 10) == 0: _a[i][j] = 1
+          if random.randint(0, 5) == 0: _a[i][j] = 1
           else: _a[i][j] = 0
 
 def get_random_points(_a):
@@ -96,28 +92,10 @@ def draw_matrix(a,m, the_path = []):
     draw.rectangle((0, 0, zoom * len(a[0]), zoom * len(a)), outline=(0,255,0), width=2)
     images.append(im)
 
+
+# //////////// START PROGRAMU ////////////
+
 images = []
-
-# a = [
-#     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-#     [1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0 ,0, 0, 0, 1, 0, 1, 1, 1, 1],
-#     [1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1 ,1, 1, 1, 1, 0, 0, 0, 0, 0],
-#     [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0 ,0, 0, 0, 1, 1, 1, 1, 1, 1],
-#     [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 1],
-#     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-# ]
-
-## RANDOM
-# a = numpy.random.random_integers(0, 1, (rows, columns))
-# a = a.tolist()
-# get_less_walls(a)
-# a[start[0]][start[1]] = 0
-# a[end[0]][end[1]] = 0
-
 
 img = Image.open('magazyn_mniejszy.png')
 a = asarray(img)
@@ -125,35 +103,41 @@ shape = a.shape
 rows = shape[0]
 columns = shape[1]
 a = a.tolist()
-
 for i in range(rows):
     for j in range(columns):
         if a[i][j][0] == 255: a[i][j] = 0
         else: a[i][j] = 1
+
 get_more_walls(a)
 start, end = get_random_points(a)
+# start = [1, 1]
+# end = [0, 0]
 zoom = 20
 borders = 6
+
+
 m = []
 
 for i in range(len(a)):
     m.append([])
     for j in range(len(a[i])):
         m[-1].append(0)
+
 i,j = start
 m[i][j] = 1
 k = 0
+
 while m[end[0]][end[1]] == 0:
     if (k <= rows*columns):
       k += 1
       make_step(k)
-      draw_matrix(a, m)
     else: break
-
 
 i, j = end
 k = m[i][j]
+frame = m[i][j]
 the_path = [(i,j)]
+
 while k > 1:
   if i > 0 and m[i - 1][j] == k-1:
     i, j = i-1, j
@@ -175,18 +159,21 @@ while k > 1:
 
 if k == 0: print("/////////// Nie znaleziono rozwiązań ////////////")
 
-
-for i in range(rows*columns):
+for i in range(frame + 20):
     if i % 2 == 0:
         draw_matrix(a, m, the_path)
     else:
         draw_matrix(a, m)
 
+# print(type(a))
+# print("\n")
+# print("[")
 # print_m(m)
+# print("\n")
 # print(the_path)
 
 
-images[0].save('opis.gif',
+images[0].save('maze.gif',
                save_all=True, append_images=images[1:],
                optimize=False, duration=1, loop=0)
 
